@@ -20,7 +20,11 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img src="<%= require('./images/avatar.jpg') %>" alt="avatar" class="profile__img" />
+          <div class="profile__avatar">
+            <img src="<%= require('./images/avatar.jpg') %>" alt="avatar" class="profile__img" />
+            <button type="button" class="profile__avatar-button"></button>
+          </div>
+          <div class="profile__img-edit-icon"></div>
           <div class="profile__info">
             <h1 class="profile__title">Joshua Zimmerman</h1>
             <button type="button" class="profile__edit-button"></button>
@@ -139,6 +143,31 @@
         />
         <p class="modal__caption-element" id="element-modal-caption"></p>
         <button class="modal__close" id="element-image-close"></button>
+      </div>
+    </div>
+
+    <div class="modal" id="profile-avatar-modal">
+      <div class="modal__container">
+        <button
+          class="modal__close"
+          id="profile-avatar-close-button"
+          type="button"
+        ></button>
+        <h2 class="modal__heading">Change profile picture</h2>
+        <form class="modal__form" id="profile-avatar-form" name="avatarForm" novalidate>
+          <div class="modal__input-container">
+            <input
+              class="modal__input"
+              type="url"
+              placeholder="Avatar URL"
+              name="avatar"
+              id="avatar-input"
+              required
+            />
+            <span class="modal__error" id="avatar-input-error"></span>
+          </div>
+          <button type="submit" class="modal__button" disabled>Save</button>
+        </form>
       </div>
     </div>
     <!-- template-->

@@ -14,7 +14,7 @@ export class Api {
      * @returns a promise that resolves to the response data
      * @description This method makes a request to the API with the specified path, method, and data.
      */
-    _makeRequest(path, method = "GET", data = null) {
+    _makeRequest(path, method, data = null) {
         const config = {
             method: method.toUpperCase(),
             headers: {

@@ -1,4 +1,7 @@
 
+/**
+ * Represents a Popup component that can be opened and closed.
+ */
 export default class Popup {
     constructor({ popupSelector }) {
         this._popupElement = document.querySelector(popupSelector);

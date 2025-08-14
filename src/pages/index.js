@@ -9,6 +9,7 @@ import {
   formValidatorConfig,
   profileEditModal,
   profileEditButton,
+  profileAvatarButton,
   profileTitleInput,
   profileDescriptionInput,
   profileEditForm,
@@ -29,6 +30,14 @@ import PopupWithForm from "../components/PopupWithForm.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import { Api } from "../utils/api.js";
 
+/** 
+* @todo fix the issue with not saving and getting user cards and profile picture. 
+  @todo fix Avatar modal
+  @todo Fix the issue with modal close button not working.
+  @todo Fix the issue with new cards added don't display any images.
+  @todo Style the avatar modal to look more like the specification sheet.
+*/
+
 document.addEventListener("DOMContentLoaded", () => {
   const api = new Api({
     baseUrl: "https://around-api.en.tripleten-services.com/v1",
@@ -36,6 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const popupImage = new PopupWithImage("#element-image-modal");
+  const popupAvatar = new PopupWithForm("#profile-avatar-modal");
+  const popupNewCard = new PopupWithForm("#element-add-modal", handleNewCardSubmit);
+  const popupEditProfile = new PopupWithForm("#profile-edit-modal", handleProfileFormSubmit);
 
   const newCardFormValidator = new FormValidator(
     formValidatorConfig,
@@ -85,11 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  const popupNewCard = new PopupWithForm(
-    "#element-add-modal",
-    handleNewCardSubmit
-  );
-
   function handleNewCardSubmit(cardData) {
     api
       .createCard(cardData)
@@ -108,17 +115,11 @@ document.addEventListener("DOMContentLoaded", () => {
     avatarElement: ".profile__img",
   });
 
-  const popupEditProfile = new PopupWithForm(
-    "#profile-edit-modal",
-    handleProfileFormSubmit
-  );
-
   function handleProfileFormSubmit(userData) {
     api
       .updateUserInfo(userData)
       .then((res) => {
         userInfo.setUserInfo(res);
-        userInfo.setUserAvatar(res);
         popupEditProfile.close();
       })
       .catch((error) => console.error(`Error updating user info: ${error}`));
@@ -144,6 +145,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   profileCloseButton.addEventListener("click", () => popupEditProfile.close());
+
+  profileAvatarButton.addEventListener("click", () => {
+    popupAvatar.open();
+  });
 
   profileEditForm.addEventListener("submit", (event) => {
     event.preventDefault();
