@@ -170,6 +170,10 @@
   opacity: 1;
 }
 
+.avatar-modal {
+  height: 272px;
+}
+
 @media screen and (max-width: 540px) {
   .modal__container {
     padding: 25px 22px;

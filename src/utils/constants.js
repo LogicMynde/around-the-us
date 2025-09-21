@@ -12,7 +12,11 @@ export const profileTitleInput = document.querySelector("#title-input");
 export const profileDescriptionInput = document.querySelector("#profile-input");
 export const profileEditForm = profileEditModal.querySelector("#profile-edit-form");
 export const profileCloseButton = profileEditModal.querySelector("#modal-profile-close-button");
+export const profileAvatarInput = document.querySelector("#avatar-input");
+export const profileAvatarModal = document.querySelector("#profile-avatar-modal");
+export const profileAvatarForm = profileAvatarModal.querySelector("#profile-avatar-form");
 export const profileAvatarButton = document.querySelector(".profile__avatar-button");
+export const profileAvatarModalCloseButton = document.querySelector("#profile-avatar-close-button");
 
 export const elementAddButton = document.querySelector(".profile__add-button");
 export const elementCloseButton = newCardModal.querySelector("#element-add-close");

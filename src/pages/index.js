@@ -11,6 +11,7 @@ import {
   profileEditButton,
   profileAvatarButton,
   profileTitleInput,
+  profileAvatarInput,
   profileDescriptionInput,
   profileEditForm,
   newCardModal,
@@ -24,6 +25,7 @@ import {
   elementImageModal,
   cardSelector,
   profileAvatar,
+  profileAvatarModalCloseButton
 } from "../utils/constants.js";
 import Section from "../components/Section.js";
 import PopupWithForm from "../components/PopupWithForm.js";
@@ -31,11 +33,10 @@ import PopupWithImage from "../components/PopupWithImage.js";
 import { Api } from "../utils/api.js";
 
 /** 
-* @todo fix the issue with not saving and getting user cards and profile picture. 
-  @todo fix Avatar modal
-  @todo Fix the issue with modal close button not working.
+  @todo fix the issue with not saving and getting user cards and profile picture. 
+  @todo fix Avatar modal behavior
   @todo Fix the issue with new cards added don't display any images.
-  @todo Style the avatar modal to look more like the specification sheet.
+  @todo Add the "Are you Sure" modal when deleting a card.
 */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -45,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const popupImage = new PopupWithImage("#element-image-modal");
-  const popupAvatar = new PopupWithForm("#profile-avatar-modal");
+  const popupAvatar = new PopupWithForm("#profile-avatar-modal", handleAvatarFormSubmit);
   const popupNewCard = new PopupWithForm("#element-add-modal", handleNewCardSubmit);
   const popupEditProfile = new PopupWithForm("#profile-edit-modal", handleProfileFormSubmit);
 
@@ -125,6 +126,18 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => console.error(`Error updating user info: ${error}`));
   }
 
+  function handleAvatarFormSubmit(avatarData) {
+    api
+      .updateUserAvatar(avatarData)
+      .then((res) => {
+        userInfo.setUserAvatar(res);
+        popupAvatar.close();
+      })
+      .catch((error) => console.error(`Error updating user avatar: ${error}`));
+  }
+
+  profileAvatarModalCloseButton.addEventListener("click", () => popupAvatar.close());
+
   elementAddButton.addEventListener("click", () => {
     popupNewCard.open();
     newCardFormValidator.resetValidation();
@@ -148,6 +161,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   profileAvatarButton.addEventListener("click", () => {
     popupAvatar.open();
+    handleAvatarFormSubmit(profileAvatarInput.value);
+  });
+
+  profileAvatarButton.addEventListener("click", (event) => {
+    event.preventDefault();
   });
 
   profileEditForm.addEventListener("submit", (event) => {
