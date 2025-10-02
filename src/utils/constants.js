@@ -31,6 +31,10 @@ export const elementImageModalCloseButton = elementImageModal.querySelector("#el
 export const modalImage = document.querySelector("#element-modal-image");
 export const modalCaption = document.querySelector("#element-modal-caption");
 
+export const elementConfirmationModal = document.querySelector("#element-confirmation-modal");
+export const elementConfirmationModalCloseButton = document.querySelector("#element-delete-close");
+export const elementDeleteConfirmationButton = document.querySelector("#element-confirmation-button");
+
 export const cardSelector = "#element-template";
 
 export const formValidatorConfig = {

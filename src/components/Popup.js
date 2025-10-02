@@ -3,28 +3,56 @@
  * Represents a Popup component that can be opened and closed.
  */
 export default class Popup {
-    constructor({ popupSelector }) {
-        this._popupElement = document.querySelector(popupSelector);
+    // Accept either a selector string or an options object: { popupSelector }
+    constructor(popupSelectorOrOptions) {
+        let popupSelector = null;
+
+        if (typeof popupSelectorOrOptions === 'string') {
+            popupSelector = popupSelectorOrOptions;
+        } else if (
+            popupSelectorOrOptions &&
+            typeof popupSelectorOrOptions === 'object' &&
+            popupSelectorOrOptions.popupSelector
+        ) {
+            popupSelector = popupSelectorOrOptions.popupSelector;
+        }
+
+        this._popupElement = popupSelector ? document.querySelector(popupSelector) : null;
         this._handleEscClose = this._handleEscClose.bind(this);
 
         if (!this._popupElement) {
-            console.error(`Element with selector ${popupSelector} not found!`);
+            console.error(`Popup element for selector "${popupSelector}" not found!`);
         }
     }
 
     open() {
+        if (!this._popupElement) {
+            console.warn('Attempted to open a Popup but the element was not found. Skipping open().');
+            return;
+        }
+
         console.log("popup opened!");
         this._popupElement.classList.add('modal_opened');
         document.addEventListener('keyup', this._handleEscClose);
     }
 
     close() {
+        if (!this._popupElement) {
+            console.warn('Attempted to close a Popup but the element was not found. Skipping close().');
+            return;
+        }
+
         console.log("popup closed!");
         this._popupElement.classList.remove('modal_opened');
         document.removeEventListener('keyup', this._handleEscClose);
     }
 
     setEventListeners() {
+        if (!this._popupElement) {
+            console.warn('setEventListeners() called but popup element was not found.');
+            return;
+        }
+
         this._popupElement.addEventListener('mousedown', (event) => {
             if (event.target.classList.contains('modal') ||
                 event.target.classList.contains('modal__close')) {

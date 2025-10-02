@@ -25,12 +25,16 @@ import {
   elementImageModal,
   cardSelector,
   profileAvatar,
-  profileAvatarModalCloseButton
+  profileAvatarModalCloseButton,
+  elementConfirmationModal,
+  elementConfirmationModalCloseButton,
+  elementDeleteConfirmationButton
 } from "../utils/constants.js";
 import Section from "../components/Section.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import { Api } from "../utils/api.js";
+import Popup from "../components/Popup.js";
 
 /** 
   @todo fix the issue with not saving and getting user cards and profile picture. 
@@ -49,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const popupAvatar = new PopupWithForm("#profile-avatar-modal", handleAvatarFormSubmit);
   const popupNewCard = new PopupWithForm("#element-add-modal", handleNewCardSubmit);
   const popupEditProfile = new PopupWithForm("#profile-edit-modal", handleProfileFormSubmit);
+  const popupDeleteCardConfirmation = new Popup("#element-confirmation-modal");
 
   const newCardFormValidator = new FormValidator(
     formValidatorConfig,

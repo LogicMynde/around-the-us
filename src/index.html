@@ -21,7 +21,11 @@
       <main class="content">
         <section class="profile page__section">
           <div class="profile__avatar">
-            <img src="<%= require('./images/avatar.jpg') %>" alt="avatar" class="profile__img" />
+            <img
+              src="<%= require('./images/avatar.jpg') %>"
+              alt="avatar"
+              class="profile__img"
+            />
             <button type="button" class="profile__avatar-button"></button>
           </div>
           <div class="profile__img-edit-icon"></div>
@@ -52,7 +56,12 @@
           type="button"
         ></button>
         <h2 class="modal__heading">Edit profile</h2>
-        <form class="modal__form" id="profile-edit-form" name="profile-form" novalidate>
+        <form
+          class="modal__form"
+          id="profile-edit-form"
+          name="profile-form"
+          novalidate
+        >
           <div class="modal__input-container">
             <input
               class="modal__input"
@@ -93,7 +102,12 @@
           type="button"
         ></button>
         <h2 class="modal__heading">New Location</h2>
-        <form class="modal__form" id="element-add-form" name="cardForm" novalidate>
+        <form
+          class="modal__form"
+          id="element-add-form"
+          name="cardForm"
+          novalidate
+        >
           <div class="modal__input-container">
             <input
               class="modal__input"
@@ -154,7 +168,12 @@
           type="button"
         ></button>
         <h2 class="modal__heading">Change profile picture</h2>
-        <form class="modal__form" id="profile-avatar-form" name="avatarForm" novalidate>
+        <form
+          class="modal__form"
+          id="profile-avatar-form"
+          name="avatarForm"
+          novalidate
+        >
           <div class="modal__input-container">
             <input
               class="modal__input"
@@ -168,6 +187,24 @@
           </div>
           <button type="submit" class="modal__button" disabled>Save</button>
         </form>
+      </div>
+    </div>
+
+    <div class="modal" id="element-confirmation-modal">
+      <div class="modal__container element-delete-modal">
+        <button
+          class="modal__close"
+          id="element-delete-close"
+          type="button"
+        ></button>
+        <div class="">
+          <h2 class="modal__heading">Are you sure?</h2>
+        </div>
+        <button
+          class="element-confirmation-button"
+          id="element-confirmation-button"
+          type="button"
+        >Yes</button>
       </div>
     </div>
     <!-- template-->
