@@ -1,6 +1,4 @@
-
 export class Api {
-
     constructor(options) {
         this._baseUrl = options.baseUrl;
         this._authToken = options.authorization;
@@ -53,7 +51,7 @@ export class Api {
             });
     }
 
-    updateUserAvatar(avatar) {
+    updateUserAvatar({ avatar }) {
         return this._makeRequest("/users/me/avatar", "PATCH", { avatar });
     }
 

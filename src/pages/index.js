@@ -25,6 +25,7 @@ import {
   elementImageModal,
   cardSelector,
   profileAvatar,
+  profileAvatarModal,
   profileAvatarModalCloseButton,
   elementConfirmationModal,
   elementConfirmationModalCloseButton,
@@ -37,9 +38,8 @@ import { Api } from "../utils/api.js";
 import Popup from "../components/Popup.js";
 
 /** 
-  @todo fix the issue with not saving and getting user cards and profile picture. 
+  @todo fix the issue with not saving and getting user profile picture. 
   @todo fix Avatar modal behavior
-  @todo Fix the issue with new cards added don't display any images.
   @todo Add the "Are you Sure" modal when deleting a card.
 */
 
@@ -63,6 +63,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const profileFormValidator = new FormValidator(
     formValidatorConfig,
     profileEditModal
+  );
+
+  const avatarFormValidator = new FormValidator(
+    formValidatorConfig,
+    profileAvatarModal
   );
 
   let cardList;
@@ -111,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         popupNewCard.resetForm();
         popupNewCard.close();
         newCardFormValidator.disableButton();
+        // possibly save card here?
       })
       .catch((error) => console.error(`Error creating a new card: ${error}`));
   }
@@ -166,12 +172,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   profileAvatarButton.addEventListener("click", () => {
     popupAvatar.open();
-    handleAvatarFormSubmit(profileAvatarInput.value);
+    avatarFormValidator.resetValidation();
   });
-
-  profileAvatarButton.addEventListener("click", (event) => {
-    event.preventDefault();
-  });
+  
+  popupAvatar.setEventListeners();
 
   profileEditForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -183,8 +187,8 @@ document.addEventListener("DOMContentLoaded", () => {
   api
     .getAppData()
     .then(({ cards, userData }) => {
-      userInfo.setUserInfo(userData);
-      userInfo.setUserAvatar(userData);
+      userInfo.setUserInfo(userData); // saves user name & description
+      userInfo.setUserAvatar(userData); // supposed to save user avatar!
 
       cardList = new Section(
         {
@@ -193,9 +197,12 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         elementList
       );
+      cardList.renderItems(); // fixed cards not loading
     })
     .catch((error) => console.error(`Error fetching initial data: ${error}`));
 
   profileFormValidator.enableValidation();
   newCardFormValidator.enableValidation();
+  avatarFormValidator.enableValidation();
+  avatarFormValidator.enableValidation();
 });

@@ -1,7 +1,7 @@
 export default class Card {
   constructor(data, cardSelector, handleImageClick, handleDeleteButton, handleLikeButton) {
     this._name = data.name;
-    this._link = data.url;
+    this._link = data.link || data.url; // fixed card image not loading
     this._cardSelector = cardSelector;
     this._handleImageClick = handleImageClick;
     this._isLiked = data.isLiked;
