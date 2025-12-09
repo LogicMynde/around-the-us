@@ -26,11 +26,26 @@ export class Api {
         }
 
         return fetch(`${this._baseUrl}${path}`, config)
-                .then(res => (res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)))
-                .catch(err => {
-                    const errorMsg = `Request to ${method.toUpperCase()} ${this._baseUrl}${path} failed: ${err.message || err}`;
-                    console.log(errorMsg);
-                });
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                // Try to get error details from response body
+                return res.json()
+                    .then(errData => Promise.reject({ 
+                        status: res.status, 
+                        message: errData.message || errData,
+                        data: errData 
+                    }))
+                    .catch(() => Promise.reject({ 
+                        status: res.status, 
+                        message: `HTTP Error ${res.status}` 
+                    }));
+            })
+            .catch(err => {
+                console.error(`Request to ${method.toUpperCase()} ${this._baseUrl}${path} failed: ${err.message || err.status || err}`);
+                return Promise.reject(err);
+            });
     }
 
     getInitialCards() {
@@ -47,7 +62,8 @@ export class Api {
                 return { cards, userData };
             })
             .catch(err => {
-                console.log(`Error fetching app data: ${err}`);
+                console.error(`Error fetching app data: ${err}`);
+                return Promise.reject(err);
             });
     }
 

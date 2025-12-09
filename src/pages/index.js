@@ -38,9 +38,8 @@ import { Api } from "../utils/api.js";
 import Popup from "../components/Popup.js";
 
 /** 
-  @todo fix the issue with not saving and getting user profile picture. 
   @todo fix Avatar modal behavior
-  @todo Add the "Are you Sure" modal when deleting a card.
+  @todo add the "saving", "creating" and "deleting" lazy loading placeholder when creating and deleting cards and changing profile info
 */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -54,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const popupNewCard = new PopupWithForm("#element-add-modal", handleNewCardSubmit);
   const popupEditProfile = new PopupWithForm("#profile-edit-modal", handleProfileFormSubmit);
   const popupDeleteCardConfirmation = new Popup("#element-confirmation-modal");
+  popupDeleteCardConfirmation.setEventListeners();
 
   const newCardFormValidator = new FormValidator(
     formValidatorConfig,
@@ -76,16 +76,40 @@ document.addEventListener("DOMContentLoaded", () => {
     popupImage.open(name, link);
   }
 
+  let cardToDelete = null;
+  let deleteHandler = null;
+
   function createCard(cardData) {
     const card = new Card(
       cardData,
       "#element-template",
       handlePicturePopup,
       () => {
-        api
-          .deleteCard(cardData._id)
-          .then(() => card.removeCard())
-          .catch((error) => console.error(`Error deleting card: ${error}`));
+        // Store the card reference for deletion
+        cardToDelete = card;
+        
+        // Remove previous event listener if it exists
+        if (deleteHandler) {
+          elementDeleteConfirmationButton.removeEventListener("click", deleteHandler);
+        }
+        
+        // Create new handler for this specific card
+        deleteHandler = () => {
+          api
+            .deleteCard(cardData._id)
+            .then(() => {
+              cardToDelete.removeCard();
+              popupDeleteCardConfirmation.close();
+              cardToDelete = null;
+            })
+            .catch((error) => console.error(`Error deleting card: ${error}`));
+        };
+        
+        // Add event listener to "Yes" button only
+        elementDeleteConfirmationButton.addEventListener("click", deleteHandler);
+        
+        // Open the confirmation modal
+        popupDeleteCardConfirmation.open();
       },
       handleLikeButton
     );
@@ -109,6 +133,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleNewCardSubmit(cardData) {
+    popupNewCard.renderLoading(true);
+
     api
       .createCard(cardData)
       .then((res) => {
@@ -116,9 +142,12 @@ document.addEventListener("DOMContentLoaded", () => {
         popupNewCard.resetForm();
         popupNewCard.close();
         newCardFormValidator.disableButton();
-        // possibly save card here?
+        popupNewCard.renderLoading(false);
       })
-      .catch((error) => console.error(`Error creating a new card: ${error}`));
+      .catch((error) => {
+        console.error(`Error creating a new card: ${error}`);
+        popupNewCard.renderLoading(false);
+      });
   }
 
   const userInfo = new UserInfo({
@@ -128,23 +157,35 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function handleProfileFormSubmit(userData) {
+    popupEditProfile.renderLoading(true);
+
     api
       .updateUserInfo(userData)
       .then((res) => {
         userInfo.setUserInfo(res);
         popupEditProfile.close();
+        popupEditProfile.renderLoading(false);
       })
-      .catch((error) => console.error(`Error updating user info: ${error}`));
+      .catch((error) => {
+        console.error(`Error updating user info: ${error}`);
+        popupEditProfile.renderLoading(false);
+      });
   }
 
   function handleAvatarFormSubmit(avatarData) {
+    popupAvatar.renderLoading(true);
+
     api
       .updateUserAvatar(avatarData)
       .then((res) => {
         userInfo.setUserAvatar(res);
         popupAvatar.close();
+        popupAvatar.renderLoading(false);
       })
-      .catch((error) => console.error(`Error updating user avatar: ${error}`));
+      .catch((error) => {
+        console.error(`Error updating user avatar: ${error}`);
+        popupAvatar.renderLoading(false);
+      });
   }
 
   profileAvatarModalCloseButton.addEventListener("click", () => popupAvatar.close());
