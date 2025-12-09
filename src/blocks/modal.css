@@ -231,4 +231,8 @@
   .modal__error {
     top: 55px;
   }
+
+  .element-delete-modal {
+    height: auto;
+  }
 }

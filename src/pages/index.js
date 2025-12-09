@@ -27,9 +27,8 @@ import {
   profileAvatar,
   profileAvatarModal,
   profileAvatarModalCloseButton,
-  elementConfirmationModal,
-  elementConfirmationModalCloseButton,
-  elementDeleteConfirmationButton
+  elementDeleteConfirmationButton,
+  elementImageModalCloseButton
 } from "../utils/constants.js";
 import Section from "../components/Section.js";
 import PopupWithForm from "../components/PopupWithForm.js";
@@ -39,7 +38,6 @@ import Popup from "../components/Popup.js";
 
 /** 
   @todo fix Avatar modal behavior
-  @todo add the "saving", "creating" and "deleting" lazy loading placeholder when creating and deleting cards and changing profile info
 */
 
 document.addEventListener("DOMContentLoaded", () => {
