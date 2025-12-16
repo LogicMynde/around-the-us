@@ -3,15 +3,11 @@ import FormValidator from "../components/FormValidator.js";
 import UserInfo from "../components/UserInfo.js";
 import "../pages/index.css";
 import {
-  profileAbout,
-  profileName,
-  initializeCards,
   formValidatorConfig,
   profileEditModal,
   profileEditButton,
   profileAvatarButton,
   profileTitleInput,
-  profileAvatarInput,
   profileDescriptionInput,
   profileEditForm,
   newCardModal,
@@ -22,23 +18,15 @@ import {
   elementList,
   elNameInput,
   elUrlInput,
-  elementImageModal,
-  cardSelector,
-  profileAvatar,
   profileAvatarModal,
   profileAvatarModalCloseButton,
   elementDeleteConfirmationButton,
-  elementImageModalCloseButton
 } from "../utils/constants.js";
 import Section from "../components/Section.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import { Api } from "../utils/api.js";
 import Popup from "../components/Popup.js";
-
-/** 
-  @todo fix Avatar modal behavior
-*/
 
 document.addEventListener("DOMContentLoaded", () => {
   const api = new Api({

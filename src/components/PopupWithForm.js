@@ -24,7 +24,6 @@ export default class PopupWithForm extends Popup {
     return values;
   }
 
-
   _submitForm = (event) => {
     event.preventDefault();
     
