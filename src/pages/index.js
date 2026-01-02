@@ -9,17 +9,10 @@ import {
   profileAvatarButton,
   profileTitleInput,
   profileDescriptionInput,
-  profileEditForm,
   newCardModal,
   elementAddButton,
-  elementCloseButton,
-  profileCloseButton,
-  elementAddForm,
   elementList,
-  elNameInput,
-  elUrlInput,
   profileAvatarModal,
-  profileAvatarModalCloseButton,
   elementDeleteConfirmationButton,
 } from "../utils/constants.js";
 import Section from "../components/Section.js";
@@ -35,10 +28,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const popupImage = new PopupWithImage("#element-image-modal");
-  const popupAvatar = new PopupWithForm("#profile-avatar-modal", handleAvatarFormSubmit);
-  const popupNewCard = new PopupWithForm("#element-add-modal", handleNewCardSubmit);
-  const popupEditProfile = new PopupWithForm("#profile-edit-modal", handleProfileFormSubmit);
+  const popupAvatar = new PopupWithForm(
+    "#profile-avatar-modal",
+    handleAvatarFormSubmit
+  );
+  const popupNewCard = new PopupWithForm(
+    "#element-add-modal",
+    handleNewCardSubmit
+  );
+  const popupEditProfile = new PopupWithForm(
+    "#profile-edit-modal",
+    handleProfileFormSubmit
+  );
   const popupDeleteCardConfirmation = new Popup("#element-confirmation-modal");
+
+  popupImage.setEventListeners();
+  popupAvatar.setEventListeners();
+  popupNewCard.setEventListeners();
+  popupEditProfile.setEventListeners();
   popupDeleteCardConfirmation.setEventListeners();
 
   const newCardFormValidator = new FormValidator(
@@ -71,15 +78,15 @@ document.addEventListener("DOMContentLoaded", () => {
       "#element-template",
       handlePicturePopup,
       () => {
-        // Store the card reference for deletion
         cardToDelete = card;
-        
-        // Remove previous event listener if it exists
+
         if (deleteHandler) {
-          elementDeleteConfirmationButton.removeEventListener("click", deleteHandler);
+          elementDeleteConfirmationButton.removeEventListener(
+            "click",
+            deleteHandler
+          );
         }
-        
-        // Create new handler for this specific card
+
         deleteHandler = () => {
           api
             .deleteCard(cardData._id)
@@ -90,11 +97,12 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch((error) => console.error(`Error deleting card: ${error}`));
         };
-        
-        // Add event listener to "Yes" button only
-        elementDeleteConfirmationButton.addEventListener("click", deleteHandler);
-        
-        // Open the confirmation modal
+
+        elementDeleteConfirmationButton.addEventListener(
+          "click",
+          deleteHandler
+        );
+
         popupDeleteCardConfirmation.open();
       },
       handleLikeButton
@@ -127,13 +135,9 @@ document.addEventListener("DOMContentLoaded", () => {
         createCard(res);
         popupNewCard.resetForm();
         popupNewCard.close();
-        newCardFormValidator.disableButton();
-        popupNewCard.renderLoading(false);
       })
-      .catch((error) => {
-        console.error(`Error creating a new card: ${error}`);
-        popupNewCard.renderLoading(false);
-      });
+      .catch((error) => console.error(`Error creating a new card: ${error}`))
+      .finally(() => popupNewCard.renderLoading(false));
   }
 
   const userInfo = new UserInfo({
@@ -150,12 +154,9 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((res) => {
         userInfo.setUserInfo(res);
         popupEditProfile.close();
-        popupEditProfile.renderLoading(false);
       })
-      .catch((error) => {
-        console.error(`Error updating user info: ${error}`);
-        popupEditProfile.renderLoading(false);
-      });
+      .catch((error) => console.error(`Error updating user info: ${error}`))
+      .finally(() => popupEditProfile.renderLoading(false));
   }
 
   function handleAvatarFormSubmit(avatarData) {
@@ -165,57 +166,34 @@ document.addEventListener("DOMContentLoaded", () => {
       .updateUserAvatar(avatarData)
       .then((res) => {
         userInfo.setUserAvatar(res);
+        popupAvatar.resetForm();
         popupAvatar.close();
-        popupAvatar.renderLoading(false);
       })
-      .catch((error) => {
-        console.error(`Error updating user avatar: ${error}`);
-        popupAvatar.renderLoading(false);
-      });
+      .catch((error) => console.error(`Error updating user avatar: ${error}`))
+      .finally(() => popupAvatar.renderLoading(false));
   }
-
-  profileAvatarModalCloseButton.addEventListener("click", () => popupAvatar.close());
 
   elementAddButton.addEventListener("click", () => {
     popupNewCard.open();
-    newCardFormValidator.resetValidation();
-  });
-
-  elementCloseButton.addEventListener("click", () => popupNewCard.close());
-
-  elementAddForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = elNameInput.value;
-    const link = elUrlInput.value;
-    handleNewCardSubmit({ name, link });
   });
 
   profileEditButton.addEventListener("click", () => {
-    popupEditProfile.open();
+    const { name, about } = userInfo.getUserInfo();
+    profileTitleInput.value = name;
+    profileDescriptionInput.value = about;
     profileFormValidator.resetValidation();
+    popupEditProfile.open();
   });
-
-  profileCloseButton.addEventListener("click", () => popupEditProfile.close());
 
   profileAvatarButton.addEventListener("click", () => {
     popupAvatar.open();
-    avatarFormValidator.resetValidation();
-  });
-  
-  popupAvatar.setEventListeners();
-
-  profileEditForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = profileTitleInput.value;
-    const about = profileDescriptionInput.value;
-    handleProfileFormSubmit({ name, about });
   });
 
   api
     .getAppData()
     .then(({ cards, userData }) => {
-      userInfo.setUserInfo(userData); // saves user name & description
-      userInfo.setUserAvatar(userData); // supposed to save user avatar!
+      userInfo.setUserInfo(userData);
+      userInfo.setUserAvatar(userData);
 
       cardList = new Section(
         {
@@ -224,12 +202,11 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         elementList
       );
-      cardList.renderItems(); // fixed cards not loading
+      cardList.renderItems();
     })
     .catch((error) => console.error(`Error fetching initial data: ${error}`));
 
   profileFormValidator.enableValidation();
   newCardFormValidator.enableValidation();
-  avatarFormValidator.enableValidation();
   avatarFormValidator.enableValidation();
 });
