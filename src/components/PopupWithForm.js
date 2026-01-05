@@ -1,7 +1,6 @@
 import Popup from "./Popup";
 
 export default class PopupWithForm extends Popup {
-
   constructor(popupSelector, handleFormSubmit) {
     super({ popupSelector });
 
@@ -24,23 +23,31 @@ export default class PopupWithForm extends Popup {
     return values;
   }
 
-  // setInputValues(data) {
-  //   this._inputList.forEach((input) => {
-  //     // Here you insert the `value` by the `name` of the input
-  //     input.value = data[input.name];
-  //   });
-  // }
-
-
   _submitForm = (event) => {
     event.preventDefault();
-    
+
     this._handleFormSubmit(this._getInputValues());
-    this._formElement.reset();
-  }
+  };
 
   setEventListeners() {
     super.setEventListeners();
     this._formElement.addEventListener("submit", this._submitForm);
+  }
+
+  renderLoading(isLoading, loadingText = "Saving...") {
+    const submitButton = this._popupElement.querySelector(".modal__button");
+
+    if (isLoading) {
+      this._buttonText = submitButton.textContent;
+      submitButton.textContent = loadingText;
+      submitButton.disabled = true;
+    } else {
+      submitButton.textContent = this._buttonText;
+      submitButton.disabled = false;
+    }
+  }
+
+  resetForm() {
+    this._formElement.reset();
   }
 }

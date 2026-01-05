@@ -170,6 +170,40 @@
   opacity: 1;
 }
 
+.avatar-modal {
+  height: 272px;
+}
+
+.element-delete-modal {
+  width: 430px;
+  height: 181px;
+  padding: 36px;
+  box-sizing: border-box;
+}
+
+.element-delete-modal .modal__heading {
+  text-align: left;
+  margin: 0 0 38px 0;
+}
+
+.element-confirmation-button {
+  height: 50px;
+  width: 100%;
+  max-width: 358px;
+  color: white;
+  background-color: black;
+  outline: none;
+  border: 0;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  transition: opacity 0.3s;
+}
+
+.element-confirmation-button:hover {
+  opacity: 0.8;
+}
+
 @media screen and (max-width: 540px) {
   .modal__container {
     padding: 25px 22px;
@@ -196,5 +230,9 @@
 
   .modal__error {
     top: 55px;
+  }
+
+  .element-delete-modal {
+    height: auto;
   }
 }
